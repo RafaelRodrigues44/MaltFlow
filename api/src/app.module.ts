@@ -5,6 +5,8 @@ import { envValidationSchema } from './config/env.schema';
 import { MasterDataModule } from './modules/master-data/master-data.module';
 import { FinancialManagementModule } from './modules/financial-management/financial-management.module';
 import { TaxFiscalModule } from './modules/tax-fiscal/tax-fiscal.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { SalesModule } from './modules/sales/sales.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { TaxFiscalModule } from './modules/tax-fiscal/tax-fiscal.module';
     MasterDataModule,
     FinancialManagementModule,
     TaxFiscalModule,
+    InventoryModule,
+    SalesModule,
   ],
 })
 export class AppModule {}

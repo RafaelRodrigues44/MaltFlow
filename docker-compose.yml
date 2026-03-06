@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: mysql:8.0
@@ -9,3 +10,26 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - '3306:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prowroot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: maltflow_api
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - DB_DATABASE=protheus_mock
+    depends_on:
+      db:
+        condition: service_healthy
