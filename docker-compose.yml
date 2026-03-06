@@ -6,12 +6,12 @@ services:
     container_name: protheus_mysql
     restart: always
     environment:
-      MYSQL_DATABASE: protheus_mock
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - '3306:3306'
+      - '${DB_PORT}:3306'
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prowroot"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USER}", "-p${DB_ROOT_PASSWORD}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,13 +23,13 @@ services:
     container_name: maltflow_api
     restart: always
     ports:
-      - '3000:3000'
+      - '${API_PORT}:3000'
     environment:
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
-      - DB_DATABASE=protheus_mock
+      - DB_USERNAME=${DB_USER}
+      - DB_PASSWORD=${DB_ROOT_PASSWORD}
+      - DB_DATABASE=${DB_NAME}
     depends_on:
       db:
         condition: service_healthy
