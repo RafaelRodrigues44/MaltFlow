@@ -19,6 +19,10 @@ export class UsersService implements OnModuleInit {
     await this.seedUsers();
   }
 
+  getAvailableRoles(): string[] {
+    return Object.values(UserRole);
+  }
+
   async create(data: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(data.password, this.saltRounds);
     const newUser = this.usersRepository.create({
