@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { UsersService } from './user.service';
-import { CreateUserDto } from './dto/sys-user.schema'; 
-import { UserRole } from './entities/user-role.enum';
+import { CreateUserDto } from './dto/sys-user.schema';
 
 @Controller('users')
 export class UsersController {
+
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
@@ -19,11 +19,12 @@ export class UsersController {
 
   @Get('roles')
   getAvailableRoles() {
-    return Object.values(UserRole);
+    return this.usersService.getAvailableRoles();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
   }
+
 }

@@ -5,32 +5,37 @@ import { UsersService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
+   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+   ) {}
 
-  async signIn(username: string, pass: string): Promise<{ access_token: string }> {
-    const user = await this.usersService.findByUsername(username);
+  async signIn(username: string, pass: string): Promise<any> {
+
+  const user = await this.usersService.findByUsername(username);
 
     if (!user) {
       throw new UnauthorizedException('Usuário não encontrado no sistema Barley');
     }
 
-    const isPasswordMatching = await bcrypt.compare(pass, user.password);
+   const isPasswordMatching = await bcrypt.compare(pass, user.password);
 
-    if (!isPasswordMatching) {
-      throw new UnauthorizedException('Credenciais inválidas');
-    }
+   if (!isPasswordMatching) {
+    throw new UnauthorizedException('Credenciais inválidas');
+   }
 
-    const payload = { 
-      sub: user.id, 
-      username: user.username, 
-      role: user.role 
-    };
+  const payload = { 
+     sub: user.id, 
+     username: user.username, 
+     role: user.role 
+  };
 
-    return {
+   return {
       access_token: await this.jwtService.signAsync(payload),
-    };
+      user: {
+        username: user.username,
+        role: user.role,
+      },
+   };
   }
 }

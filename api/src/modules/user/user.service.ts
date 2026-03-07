@@ -3,11 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ZUREntity } from './entities/sys-user.entity';
-import { UserRole } from './entities/user-role.enum';
+import { UserRole, UserRoleLabels } from './entities/user-role.enum';
 import { CreateUserDto } from './dto/sys-user.schema';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
+
   private readonly saltRounds = 10;
 
   constructor(
@@ -19,16 +20,21 @@ export class UsersService implements OnModuleInit {
     await this.seedUsers();
   }
 
-  getAvailableRoles(): string[] {
-    return Object.values(UserRole);
+  getAvailableRoles() {
+    return Object.values(UserRole).map(role => ({
+      value: role,
+      label: UserRoleLabels[role],
+    }));
   }
 
   async create(data: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(data.password, this.saltRounds);
+
     const newUser = this.usersRepository.create({
       ...data,
       password: hashedPassword,
     });
+
     return await this.usersRepository.save(newUser);
   }
 
@@ -40,7 +46,9 @@ export class UsersService implements OnModuleInit {
 
   async findOne(id: number): Promise<ZUREntity> {
     const user = await this.usersRepository.findOne({ where: { id } });
+
     if (!user) throw new NotFoundException('Usuário não encontrado');
+
     return user;
   }
 
@@ -50,6 +58,7 @@ export class UsersService implements OnModuleInit {
 
   private async seedUsers() {
     const count = await this.usersRepository.count();
+
     if (count === 0) {
       await this.create({
         username: 'admin',
@@ -58,4 +67,5 @@ export class UsersService implements OnModuleInit {
       });
     }
   }
+
 }
