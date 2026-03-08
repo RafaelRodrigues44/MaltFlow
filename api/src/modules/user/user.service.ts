@@ -68,4 +68,17 @@ export class UsersService implements OnModuleInit {
     }
   }
 
+  async update(id: number, data: { password?: string; isActive?: boolean }) {
+    const user = await this.findOne(id);
+
+    if (data.password) {
+      user.password = await bcrypt.hash(data.password, this.saltRounds);
+    }
+
+    if (typeof data.isActive !== 'undefined') {
+      user.isActive = data.isActive;
+    }
+
+    return await this.usersRepository.save(user);
+  }
 }

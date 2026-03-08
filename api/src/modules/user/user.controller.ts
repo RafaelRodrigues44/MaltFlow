@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/sys-user.schema';
 
@@ -27,4 +27,11 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number, 
+    @Body() data: { password?: string; isActive?: boolean }
+  ) {
+    return this.usersService.update(id, data);
+  }
 }

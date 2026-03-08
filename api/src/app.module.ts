@@ -15,6 +15,7 @@ import { MasterDataModule } from './modules/master-data/master-data.module';
 
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth-guard';
 import { RolesGuard } from './modules/auth/guards/roles.guard';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { RolesGuard } from './modules/auth/guards/roles.guard';
     FinancialManagementModule,
     TaxFiscalModule,
     MasterDataModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [
